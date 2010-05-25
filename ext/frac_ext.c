@@ -24,6 +24,10 @@
 #include <stdio.h>
 #include <ruby.h>
 
+#ifndef RFLOAT_VALUE
+#  define RFLOAT_VALUE(v) RFLOAT(rb_Float(v))->value
+#endif
+
 static VALUE find_fracs(VALUE mod, VALUE rv, VALUE dv) 
 {
   VALUE ret;
