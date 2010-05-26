@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{frac}
-  s.version = "0.9.2"
+  s.version = "0.9.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Pavel Valodzka"]
@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.description = %q{Find rational approximation to given real number}
   s.email = %q{pavel@valodzka.name}
   s.extensions = ['ext/extconf.rb']
-  s.files = %w{ext/frac_ext.c ext/extconf.rb lib/frac.rb}
+  s.files = %w{ext/frac_ext.c ext/extconf.rb lib/frac.rb test/frac_test.rb}
   s.has_rdoc = false
   s.homepage = %q{http://github.com/valodzka/frac}
   s.require_paths = ["lib"]
