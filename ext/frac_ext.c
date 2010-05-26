@@ -1,4 +1,3 @@
-// http://www.ics.uci.edu/~eppstein/numth/frap.c
 /*
 ** find rational approximation to given real number
 ** David Eppstein / UC Irvine / 8 Aug 1993
@@ -81,10 +80,7 @@ static VALUE find_fracs(VALUE mod, VALUE rv, VALUE dv)
   }
 }
 
-
 void Init_frac_ext() 
 {
   rb_define_module_function(rb_mMath, "find_fracs", find_fracs, 2);
 }
-
-
