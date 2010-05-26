@@ -1,0 +1,33 @@
+= Find rational approximation to given real number
+
+Convert Float to Rational with given denominator maximum
+
+  Math.frac(0.2, 100)  # => (1/5)
+  Math.frac(0.33, 10)  # => (1/3)
+  Math.frac(0.33, 100) # => (33/100)
+
+== Differe from ruby 1.9 build-in Float#to_r
+
+                                # Build-in
+  1.1.to_r                      # => (2476979795053773/2251799813685248)
+                                # Math#frac with big max denominator
+  Math.frac(1.1, 1_000_000_000) # => (11/10)  
+
+== Source
+
+Idea and most implementation from http://www.ics.uci.edu/~eppstein/numth/frap.c
+
+Based on the theory of continued fractions
+
+  if x = a1 + 1/(a2 + 1/(a3 + 1/(a4 + ...)))
+
+then best approximation is found by truncating this series
+(with some adjustments in the last term).
+
+Note the fraction can be recovered as the first column of the matrix
+
+  ( a1 1 ) ( a2 1 ) ( a3 1 ) ...
+  ( 1  0 ) ( 1  0 ) ( 1  0 )
+  
+Instead of keeping the sequence of continued fraction terms,
+we just keep the last partial product of these matrices.

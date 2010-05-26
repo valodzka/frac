@@ -35,6 +35,9 @@ static VALUE find_fracs(VALUE mod, VALUE rv, VALUE dv)
   double startx, x = RFLOAT_VALUE(rv);
   long ai, maxden = NUM2LONG(dv);
 
+  if (maxden <= 0)
+    rb_raise(rb_eArgError, "maximum denominator should be > 0");
+
   startx = x;
 
   /* initialize matrix */
