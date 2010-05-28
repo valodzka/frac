@@ -21,6 +21,7 @@
 */
 
 #include <stdio.h>
+#include <math.h>
 #include <ruby.h>
 
 #ifndef RFLOAT_VALUE
@@ -77,22 +78,23 @@ static VALUE fname(VALUE mod, VALUE rv, VALUE dv)      \
      /* now remaining x is between 0 and 1/ai */  \
      /* approx as either 0 or 1/m where m is max that will fit in maxden */ \
      /* first try zero */                         \
-    VALUE num1, den1, err1, num2, den2, err2; \
+    double derr1, derr2;                          \
+    ltype lnum1, lden1, lnum2, lden2;          \
                                               \
-    num1 = n2r(m[0][0]);                      \
-    den1 = n2r(m[1][0]);                      \
-    err1 = rb_float_new(startx - ((double) m[0][0] / (double) m[1][0])); \
+    lnum1 = m[0][0];                      \
+    lden1 = m[1][0];                      \
+    derr1 = startx - ((double) m[0][0] / (double) m[1][0]); \
                                               \
     /* now try other possibility */           \
     ai = (maxden - m[1][1]) / m[1][0];        \
     m[0][0] = m[0][0] * ai + m[0][1];         \
     m[1][0] = m[1][0] * ai + m[1][1];         \
                                               \
-    num2 = n2r(m[0][0]);                      \
-    den2 = n2r(m[1][0]);                      \
-    err2 = rb_float_new(startx - ((double) m[0][0] / (double) m[1][0])); \
+    lnum2 = n2r(m[0][0]);                      \
+    lden2 = n2r(m[1][0]);                      \
+    derr2 = rb_float_new(startx - ((double) m[0][0] / (double) m[1][0])); \
                                               \
-    return rb_ary_new3(6, num1, den1, err1, num2, den2, err2);           \
+    return fabs(derr1) < fabs(derr2) ? rb_Rational(n2r(lnum1), n2r(lden1)) : rb_Rational(n2r(lnum2), n2r(lden2)); \
   }                                           \
 }                                             
 
