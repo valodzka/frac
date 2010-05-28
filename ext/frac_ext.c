@@ -27,69 +27,82 @@
 #  define RFLOAT_VALUE(v) RFLOAT(rb_Float(v))->value
 #endif
 
-#ifdef HAVE_LONG_LONG
-#  define N_TYPE LONG_LONG
-#  define R2N NUM2LL
-#  define N2R LL2NUM
-#else
-#  define N_TYPE long
-#  define R2N NUM2LONG
-#  define N2R LONG2NUM
-#endif
+/*
+// #ifdef HAVE_LONG_LONG
+// #  define N_TYPE LONG_LONG
+// #  define R2N(x) NUM2LL(x)
+// #  define N2R(x) LL2NUM(x)
+// #else
+// #define N_TYPE long
+// #define R2N(x) NUM2LONG(x)
+// #define N2R(x) LONG2NUM(x)
+// #endif
 
-static VALUE find_fracs(VALUE mod, VALUE rv, VALUE dv) 
-{
-  VALUE ret;
-  N_TYPE m[2][2], ai, maxden = R2N(rb_Integer(dv));
-  double startx, x = RFLOAT_VALUE(rb_Float(rv));
+// #define  N_TYPE int
+// #define  R2N(x) NUM2INT(x)
+// #define  N2R(x) INT2NUM(x)
 
-  if (maxden <= 0)
-    rb_raise(rb_eArgError, "maximum denominator should be > 0");
+*/
 
-  startx = x;
+#define FIND_FRACS(fname, ltype, r2n, n2r)              \
+static VALUE fname(VALUE mod, VALUE rv, VALUE dv)      \
+{                                                      \
+  ltype  m[2][2], ai, maxden = r2n(rb_Integer(dv));    \
+  double startx, x = RFLOAT_VALUE(rb_Float(rv));       \
+                                                       \
+  if (maxden <= 0)                                     \
+    rb_raise(rb_eArgError, "maximum denominator should be > 0"); \
+                                                       \
+  startx = x;                                          \
+                                                       \
+  /* initialize matrix */                              \
+  m[0][0] = m[1][1] = 1;                               \
+  m[0][1] = m[1][0] = 0;                               \
+                                                       \
+  /* loop finding terms until denom gets too big */    \
+  while (m[1][0] *  ( ai = (ltype)x ) + m[1][1] <= maxden) { \
+    ltype t;                                           \
+    t = m[0][0] * ai + m[0][1];                        \
+    m[0][1] = m[0][0];                                 \
+    m[0][0] = t;                                       \
+    t = m[1][0] * ai + m[1][1];                        \
+    m[1][1] = m[1][0];                                 \
+    m[1][0] = t;                                        \
+    if(x==(double)ai) break;     /* AF: division by zero */      \
+    x = 1/(x - (double) ai);    \
+    if(x>(double)0x7FFFFFFF) break;  /* AF: representation failure */ \
+  } \
+    \
+  { \
+     /* now remaining x is between 0 and 1/ai */  \
+     /* approx as either 0 or 1/m where m is max that will fit in maxden */ \
+     /* first try zero */                         \
+    VALUE num1, den1, err1, num2, den2, err2; \
+                                              \
+    num1 = n2r(m[0][0]);                      \
+    den1 = n2r(m[1][0]);                      \
+    err1 = rb_float_new(startx - ((double) m[0][0] / (double) m[1][0])); \
+                                              \
+    /* now try other possibility */           \
+    ai = (maxden - m[1][1]) / m[1][0];        \
+    m[0][0] = m[0][0] * ai + m[0][1];         \
+    m[1][0] = m[1][0] * ai + m[1][1];         \
+                                              \
+    num2 = n2r(m[0][0]);                      \
+    den2 = n2r(m[1][0]);                      \
+    err2 = rb_float_new(startx - ((double) m[0][0] / (double) m[1][0])); \
+                                              \
+    return rb_ary_new3(6, num1, den1, err1, num2, den2, err2);           \
+  }                                           \
+}                                             
 
-  /* initialize matrix */
-  m[0][0] = m[1][1] = 1;
-  m[0][1] = m[1][0] = 0;
-
-  /* loop finding terms until denom gets too big */
-  while (m[1][0] *  ( ai = (N_TYPE)x ) + m[1][1] <= maxden) {
-    N_TYPE t;
-    t = m[0][0] * ai + m[0][1];
-    m[0][1] = m[0][0];
-    m[0][0] = t;
-    t = m[1][0] * ai + m[1][1];
-    m[1][1] = m[1][0];
-    m[1][0] = t;
-    if(x==(double)ai) break;     // AF: division by zero
-    x = 1/(x - (double) ai);
-    if(x>(double)0x7FFFFFFF) break;  // AF: representation failure
-  } 
-
-  {
-    /* now remaining x is between 0 and 1/ai */
-    /* approx as either 0 or 1/m where m is max that will fit in maxden */
-    /* first try zero */
-    VALUE num1, den1, err1, num2, den2, err2;
-
-    num1 = N2R(m[0][0]);
-    den1 = N2R(m[1][0]);
-    err1 = rb_float_new(startx - ((double) m[0][0] / (double) m[1][0]));
-
-    /* now try other possibility */
-    ai = (maxden - m[1][1]) / m[1][0];
-    m[0][0] = m[0][0] * ai + m[0][1];
-    m[1][0] = m[1][0] * ai + m[1][1];
-
-    num2 = N2R(m[0][0]);
-    den2 = N2R(m[1][0]);
-    err2 = rb_float_new(startx - ((double) m[0][0] / (double) m[1][0]));
-
-    return rb_ary_new3(6, num1, den1, err1, num2, den2, err2);
-  }
-}
+FIND_FRACS(find_fracs_long, long, NUM2LONG, LONG2NUM)
+FIND_FRACS(find_fracs_ll, LONG_LONG, NUM2LL, LL2NUM)
+FIND_FRACS(find_fracs_int, int, NUM2INT, INT2NUM)
 
 void Init_frac_ext() 
 {
-  rb_define_module_function(rb_mMath, "find_fracs", find_fracs, 2);
+  rb_define_module_function(rb_mMath, "find_fracs_long", find_fracs_long, 2);
+  rb_define_module_function(rb_mMath, "find_fracs_ll", find_fracs_ll, 2);
+  rb_define_module_function(rb_mMath, "find_fracs_int", find_fracs_int, 2);
 }
