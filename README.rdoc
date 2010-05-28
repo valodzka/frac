@@ -8,10 +8,10 @@ Convert Float to Rational with given denominator maximum
 
 == Difference from ruby 1.9 build-in Float#to_r
 
-                                # Build-in
-  1.1.to_r                      # => (2476979795053773/2251799813685248)
-                                # Math#frac with big max denominator
-  Math.frac(1.1, 1_000_000_000) # => (11/10)  
+                                            # Build-in
+  1.1.to_r                                  # => (2476979795053773/2251799813685248)
+                                            # Math#frac with big max denominator
+  Math.frac(1.1, 1_000_000_000_000_000_000) # => (11/10)
 
 == Installation
 

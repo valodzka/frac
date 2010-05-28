@@ -27,12 +27,21 @@
 #  define RFLOAT_VALUE(v) RFLOAT(rb_Float(v))->value
 #endif
 
+#ifdef HAVE_LONG_LONG
+#  define N_TYPE LONG_LONG
+#  define R2N NUM2LL
+#  define N2R LL2NUM
+#else
+#  define N_TYPE long
+#  define R2N NUM2LONG
+#  define N2R LONG2NUM
+#endif
+
 static VALUE find_fracs(VALUE mod, VALUE rv, VALUE dv) 
 {
   VALUE ret;
-  long m[2][2];
+  N_TYPE m[2][2], ai, maxden = R2N(rb_Integer(dv));
   double startx, x = RFLOAT_VALUE(rb_Float(rv));
-  long ai, maxden = NUM2LONG(rb_Integer(dv));
 
   if (maxden <= 0)
     rb_raise(rb_eArgError, "maximum denominator should be > 0");
@@ -44,8 +53,8 @@ static VALUE find_fracs(VALUE mod, VALUE rv, VALUE dv)
   m[0][1] = m[1][0] = 0;
 
   /* loop finding terms until denom gets too big */
-  while (m[1][0] *  ( ai = (long)x ) + m[1][1] <= maxden) {
-    long t;
+  while (m[1][0] *  ( ai = (N_TYPE)x ) + m[1][1] <= maxden) {
+    N_TYPE t;
     t = m[0][0] * ai + m[0][1];
     m[0][1] = m[0][0];
     m[0][0] = t;
@@ -63,8 +72,8 @@ static VALUE find_fracs(VALUE mod, VALUE rv, VALUE dv)
     /* first try zero */
     VALUE num1, den1, err1, num2, den2, err2;
 
-    num1 = LONG2NUM(m[0][0]);
-    den1 = LONG2NUM(m[1][0]);
+    num1 = N2R(m[0][0]);
+    den1 = N2R(m[1][0]);
     err1 = rb_float_new(startx - ((double) m[0][0] / (double) m[1][0]));
 
     /* now try other possibility */
@@ -72,8 +81,8 @@ static VALUE find_fracs(VALUE mod, VALUE rv, VALUE dv)
     m[0][0] = m[0][0] * ai + m[0][1];
     m[1][0] = m[1][0] * ai + m[1][1];
 
-    num2 = LONG2NUM(m[0][0]);
-    den2 = LONG2NUM(m[1][0]);
+    num2 = N2R(m[0][0]);
+    den2 = N2R(m[1][0]);
     err2 = rb_float_new(startx - ((double) m[0][0] / (double) m[1][0]));
 
     return rb_ary_new3(6, num1, den1, err1, num2, den2, err2);
