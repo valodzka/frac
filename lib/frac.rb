@@ -1,6 +1,6 @@
-
 require 'rational'
-require File.join(File.dirname(__FILE__), %w{.. ext frac_ext})
+
+require File.join(File.dirname(__FILE__), %w{.. lib frac_ext})
 
 module Math
   class << self

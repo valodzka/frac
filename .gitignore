@@ -1,4 +1,9 @@
+# Gemstuff
 Gemfile.lock
+
+# compiled
+lib/frac_ext.so
+tmp
 
 # rcov generated
 coverage

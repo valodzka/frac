@@ -40,6 +40,13 @@ we just keep the last partial product of these matrices.
   RDOC
 end
 
+require 'rake/extensiontask'
+Rake::ExtensionTask.new do |ext|
+  ext.ext_dir = 'ext'
+  ext.lib_dir = 'lib'
+  ext.name = 'frac_ext'
+end
+
 Jeweler::RubygemsDotOrgTasks.new
 
 require 'rake/testtask'
@@ -56,7 +63,7 @@ Rcov::RcovTask.new do |test|
   test.verbose = true
 end
 
-task :default => :test
+task :default => [ :compile, :test ]
 
 require 'rdoc/task'
 Rake::RDocTask.new do |rdoc|
