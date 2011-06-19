@@ -24,6 +24,18 @@ class TC_Frac < Test::Unit::TestCase
       assert_equal s, Math::Fraction.new(float, prec).to_s, "#{float.inspect} -> #{s}"
     }
   end
+  
+  def test_frac_strings
+    [[ "0.333",     [0, 1, 3],     "1/3" ],
+     [ "3.56",    [3, 14, 25], "3 14/25" ],
+     [ "3 1/8",     [3, 1, 8],   "3 1/8" ],
+     [ "-3 1/8",   [-3, 1, 8],  "-3 1/8" ],
+     [ "-1/8",     [0, -1, 8],    "-1/8" ],
+    ].each{|float, n, s|
+      assert_equal n, Math::Fraction.new(float).to_a, "#{float.inspect} -> #{n}"
+      assert_equal s, Math::Fraction.new(float).to_s, "#{float.inspect} -> #{s}"
+    }
+  end
 	
   def test_access
     assert_raise NoMethodError do
