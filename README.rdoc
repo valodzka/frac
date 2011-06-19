@@ -2,16 +2,21 @@
 
 Convert Float to Rational with given denominator maximum
 
-  Math.frac(0.2, 100)  # => (1/5)
-  Math.frac(0.33, 10)  # => (1/3)
-  Math.frac(0.33, 100) # => (33/100)
+  Math::Fraction.new(0.2).to_s # => 1/5 
+  Math::Fraction.new(1.2).to_s # => 1 1/5
+  Math::Fraction.new(1.2).to_r # => 6/5
+  Math::Fraction.new(1.2).to_a # => [1, 1, 5]
 
+  Math::Fraction.new(0.2, 100)  # => (1/5)
+  Math::Fraction.new(0.33, 10)  # => (1/3)
+  Math::Fraction.new(0.33, 100) # => (33/100)
+  
 == Difference from ruby 1.9 build-in Float#to_r
 
-                                            # Build-in
+                                            # Built-in
   1.1.to_r                                  # => (2476979795053773/2251799813685248)
                                             # Math#frac with big max denominator
-  Math.frac(1.1, 1_000_000_000_000_000_000) # => (11/10)
+  Math::Fraction.new(1.1, 1_000_000_000_000_000_000) # => (11/10)
 
 == Installation
 
