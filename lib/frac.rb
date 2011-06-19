@@ -42,6 +42,10 @@ module Math
       @r
     end
 
+    def to_f
+      @r.to_f
+    end
+    
     def to_s
       n = to_a
       if n[1] == 0

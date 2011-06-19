@@ -26,14 +26,16 @@ class TC_Frac < Test::Unit::TestCase
   end
   
   def test_frac_strings
-    [[ "0.333",     [0, 1, 3],     "1/3" ],
-     [ "3.56",    [3, 14, 25], "3 14/25" ],
-     [ "3 1/8",     [3, 1, 8],   "3 1/8" ],
-     [ "-3 1/8",   [-3, 1, 8],  "-3 1/8" ],
-     [ "-1/8",     [0, -1, 8],    "-1/8" ],
-    ].each{|float, n, s|
-      assert_equal n, Math::Fraction.new(float).to_a, "#{float.inspect} -> #{n}"
-      assert_equal s, Math::Fraction.new(float).to_s, "#{float.inspect} -> #{s}"
+    [[ "0.333",     [0, 1, 3],     "1/3", 1.to_f / 3 ],
+     [ "3.56",    [3, 14, 25], "3 14/25", 3.56 ],
+     [ "3 1/8",     [3, 1, 8],   "3 1/8", 3.125 ],
+     [ "-3 1/8",   [-3, 1, 8],  "-3 1/8", -3.125 ],
+     [ "-1/8",     [0, -1, 8],    "-1/8", -0.125 ],
+    ].each{|float, n, s, f|
+      r = Math::Fraction.new(float)
+      assert_equal n, r.to_a, "#{float.inspect} -> #{n}"
+      assert_equal s, r.to_s, "#{float.inspect} -> #{s}"
+      assert_equal f, r.to_f, "#{float.inspect} -> #{f}"
     }
   end
 	
