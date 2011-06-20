@@ -16,7 +16,9 @@ module Math
   class Fraction
 
     def initialize(float, maxden = 0x100)
-      if float.is_a?(String)
+      if ! float
+        @r = 0
+      elsif float.is_a?(String)
         @r = 0
         sign = 1
         float.split(' ', 2).each do |part|
