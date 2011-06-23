@@ -18,6 +18,7 @@ class TC_Frac < Test::Unit::TestCase
      [ 0.001,    [0, 1],      2,    [0, 0, 1],       "0" ],
      [ 0.001, [1, 1000],   1000, [0, 1, 1000],  "1/1000" ],
      [ 3.56,   [89, 25],  0x100,  [3, 14, 25], "3 14/25" ],
+     [ "3.56",   [89, 25],  0x100,  [3, 14, 25], "3 14/25" ],
     ].each{|float, num_den, prec, n, s|
       assert_equal Rational(num_den[0], num_den[1]), Math.frac(float, prec), "#{float.inspect} -> #{num_den[0]} / #{num_den[1]}"
       assert_equal n, Math::Fraction.new(float, prec).to_a, "#{float.inspect} -> #{n}"

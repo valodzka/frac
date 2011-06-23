@@ -42,9 +42,15 @@ static VALUE find_fracs(VALUE mod, VALUE rv, VALUE dv)
   VALUE ret;
   N_TYPE m[2][2], ai, maxden = R2N(rb_Integer(dv));
   double startx, x = RFLOAT_VALUE(rb_Float(rv));
+  int sign = 1;
 
   if (maxden <= 0)
     rb_raise(rb_eArgError, "maximum denominator should be > 0");
+
+  if (x < 0) {
+    sign = -1;
+    x = -x;
+  }
 
   startx = x;
 
@@ -72,7 +78,7 @@ static VALUE find_fracs(VALUE mod, VALUE rv, VALUE dv)
     /* first try zero */
     VALUE num1, den1, err1, num2, den2, err2;
 
-    num1 = N2R(m[0][0]);
+    num1 = N2R(sign*m[0][0]);
     den1 = N2R(m[1][0]);
     err1 = rb_float_new(startx - ((double) m[0][0] / (double) m[1][0]));
 
@@ -81,7 +87,7 @@ static VALUE find_fracs(VALUE mod, VALUE rv, VALUE dv)
     m[0][0] = m[0][0] * ai + m[0][1];
     m[1][0] = m[1][0] * ai + m[1][1];
 
-    num2 = N2R(m[0][0]);
+    num2 = N2R(sign*m[0][0]);
     den2 = N2R(m[1][0]);
     err2 = rb_float_new(startx - ((double) m[0][0] / (double) m[1][0]));
 
