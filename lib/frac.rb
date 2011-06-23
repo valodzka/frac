@@ -16,14 +16,12 @@ module Math
   class Fraction
 
     def initialize(float, maxden = 0x100)
-      if ! float
-        @r = 0
-      elsif float.is_a?(String)
+      if float.is_a?(String)
         @r = 0
         sign = 1
         float.split(' ', 2).each do |part|
           if (part.include?("/"))
-            @r += sign * Rational(*(part.split('/', 2).map( &:to_i )))
+            @r += sign * Rational(*(part.split('/', 2).map(&method(:Integer))))
           else
             @r += Math.frac(part, maxden)
             sign = @r >= 0 ? 1 : -1

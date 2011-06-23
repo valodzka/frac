@@ -46,11 +46,19 @@ class TC_Frac < Test::Unit::TestCase
     end
   end
 	
-  def test_validation
+  def test_frac_validation
     [[1.1, ''], [nil, 0x100], [1.1, 0], [1.5, -100]].each{|params|
       assert_raise ArgumentError, TypeError do
         Math.frac(*params)
       end
     }
-  end  
+  end
+
+  def test_fractions_validation
+    ['junk', 'junk 2/3', '10 junk/2', '11 3/junk', nil].each{|param|
+      assert_raise ArgumentError, TypeError, "For param #{param}" do
+        Math::Fraction.new(param)
+      end
+    }
+  end
 end
