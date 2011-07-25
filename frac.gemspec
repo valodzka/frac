@@ -27,7 +27,7 @@ Gem::Specification.new do |s|
     "test/frac_test.rb"
   ]
   s.homepage = %q{https://github.com/valodzka/frac}
-  s.licenses = [""]
+  s.licenses = ["MIT license"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.6.2}
   s.summary = %q{Find rational approximation to given real number.  Based on the theory of continued fractions  if x = a1 + 1/(a2 + 1/(a3 + 1/(a4 + ...)))  then best approximation is found by truncating this series (with some adjustments in the last term). Note the fraction can be recovered as the first column of the matrix  ( a1 1 ) ( a2 1 ) ( a3 1 ) ... ( 1  0 ) ( 1  0 ) ( 1  0 )  Instead of keeping the sequence of continued fraction terms, we just keep the last partial product of these matrices.}
