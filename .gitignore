@@ -3,6 +3,7 @@ Gemfile.lock
 
 # compiled
 lib/frac_ext.so
+lib/frac_ext.jar
 tmp
 
 # rcov generated
@@ -21,7 +22,7 @@ doc
 # jeweler generated
 pkg
 
-# Have editor/IDE/OS specific files you need to ignore? Consider using a global gitignore: 
+# Have editor/IDE/OS specific files you need to ignore? Consider using a global gitignore:
 #
 # * Create a file at ~/.gitignore
 # * Include files you want ignored

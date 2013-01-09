@@ -37,9 +37,8 @@
 #  define N2R LONG2NUM
 #endif
 
-static VALUE find_fracs(VALUE mod, VALUE rv, VALUE dv) 
+static VALUE find_fracs(VALUE mod, VALUE rv, VALUE dv)
 {
-  VALUE ret;
   N_TYPE m[2][2], ai, maxden = R2N(rb_Integer(dv));
   double startx, x = RFLOAT_VALUE(rb_Float(rv));
   int sign = 1;
@@ -70,7 +69,7 @@ static VALUE find_fracs(VALUE mod, VALUE rv, VALUE dv)
     if(x==(double)ai) break;     // AF: division by zero
     x = 1/(x - (double) ai);
     if(x>(double)0x7FFFFFFF) break;  // AF: representation failure
-  } 
+  }
 
   {
     /* now remaining x is between 0 and 1/ai */
@@ -95,7 +94,7 @@ static VALUE find_fracs(VALUE mod, VALUE rv, VALUE dv)
   }
 }
 
-void Init_frac_ext() 
+void Init_frac_ext()
 {
   rb_define_module_function(rb_mMath, "find_fracs", find_fracs, 2);
 }
