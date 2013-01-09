@@ -3,7 +3,6 @@ Gemfile.lock
 
 # compiled
 lib/frac_ext.so
-lib/frac_ext.jar
 tmp
 
 # rcov generated
