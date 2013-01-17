@@ -1,4 +1,4 @@
-Next Release
+0.9.6
 ============
 * Added JRuby support - [@dblock](https://github.com/dblock).
 
